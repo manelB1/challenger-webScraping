@@ -158,7 +158,7 @@ def send_info():
             saved_data = json.loads(file.read())
 
         # Enviar as informações para a nova rota via POST
-        response = requests.post('URL_DA_NOVA_ROTA', json=saved_data)
+        response = requests.post('http://127.0.0.1:5000/api/v1/receive-info', json=saved_data)
         if response.status_code == 200:
             return {
                 "message": "Informações enviadas com sucesso."
