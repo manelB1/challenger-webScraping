@@ -50,4 +50,6 @@ Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE` pa
 - ![Alt text](image-1.png)
 - Tratamento para numero invalido ou campo vazio ![Alt text](image-2.png)
 
-
+## Sobre CAPTCHA
+- Não encontrei nenhum nesse tipo de consulta
+- Único jeito que conheço para quebrar é utilizando APIS, isso é um tipo de conhecimento que irei aprender com pessoas com mais conhecimento que eu.
