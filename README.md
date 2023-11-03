@@ -49,6 +49,4 @@ Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE` pa
 - ![Alt text](image-1.png)
 - Tratamento para numero invalido ou campo vazio ![Alt text](image-2.png)
 
-## Agradecimentos
-- Agradecemos à comunidade de código aberto e aos desenvolvedores das bibliotecas que tornaram este projeto possível.
 
