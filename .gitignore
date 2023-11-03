@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+.dados_extraidos.txt
 
 # Distribution / packaging
 .Python
