@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+import logging
 import json
 from lxml import html
 import requests
 app = Flask(__name__)
 
 
+logging.basicConfig(filename='app.log', level=logging.INFO)
 
 jsessionid = None
 oauth_token_request_state = None
@@ -18,6 +20,7 @@ def get_session_cookies_and_headers():
     if not jsessionid or not oauth_token_request_state or not awsalbapp:
         response = requests.get('https://tjpi.pje.jus.br/1g/ConsultaPublica/listView.seam')
         if response.status_code == 200:
+            logging.info("Capturando cookies da sessão")
             cookies = response.cookies
             jsessionid = cookies.get('JSESSIONID')
             oauth_token_request_state = cookies.get('OAuth_Token_Request_State')
@@ -93,6 +96,7 @@ def find_process_tj():
 
         data = f'AJAXREQUEST=_viewRoot&fPP%3AnumProcesso-inputNumeroProcessoDecoration%3AnumProcesso-inputNumeroProcesso={numero_processo}&mascaraProcessoReferenciaRadio=on&fPP%3Aj_id147%3AprocessoReferenciaInput=&fPP%3Adnp%3AnomeParte=&fPP%3Aj_id165%3AnomeAdv=&fPP%3Aj_id174%3AclasseProcessualProcessoHidden=&fPP%3ADecoration%3AnumeroOAB=&fPP%3ADecoration%3Aj_id200=&fPP%3ADecoration%3AestadoComboOAB=org.jboss.seam.ui.NoSelectionConverter.noSelectionValue&fPP=fPP&autoScroll=&javax.faces.ViewState=j_id1&fPP%3Aj_id206=fPP%3Aj_id206&AJAX%3AEVENTS_COUNT=1&'
 
+        logging.info("Realizando consulta")
         response = requests.post('https://tjpi.pje.jus.br/1g/ConsultaPublica/listView.seam', cookies=cookies, headers=headers, data=data)
         
         process_info = {}
@@ -101,18 +105,29 @@ def find_process_tj():
             response_data = response.text
 
             tree = html.fromstring(response_data)
-
+            logging.info("Consulta realizada com sucesso!!")
             td_elements = tree.xpath('//table[@id="fPP:processosTable"]/tbody/tr/td')
-
+            
             if len(td_elements) >= 3:
                 process_info["partes envolvidas"] = td_elements[1].text_content()
                 process_info["ultimas movimentações"] = td_elements[2].text_content()
 
         if response.status_code > 300:
             # Tratamento de erro para códigos de status HTTP diferentes de sucesso
+            logging.warning("Recebido código de status HTTP inesperado: %d", response.status_code)
             return {
                 "error": response.status_code
             }
+        
+        if not process_info:
+            # Tratamento de erro para número de processo inválido ou campo não preenchido
+            logging.error("Número de processo inválido ou campo não preenchido.")
+            return {
+                "error": "Número de processo inválido ou campo não preenchido."
+            }, 400
+        
+        with open('dados_extraidos.txt', 'w') as file:
+            file.write(json.dumps(process_info))
             
         return jsonify({
             "tj_process": process_info
@@ -120,6 +135,7 @@ def find_process_tj():
     
     except requests.exceptions.RequestException as e:
         # Tratamento de erro para problemas na requisição HTTP
+        logging.error("Erro na requisição HTTP: %s", str(e))
         return {
             "error": "Erro na requisição HTTP.",
             "detail": str(e)
@@ -127,11 +143,34 @@ def find_process_tj():
 
     except Exception as e:
         # Tratamento de erro genérico para exceções inesperadas
+        logging.error("Erro inesperado: %s", str(e))
         return {
             "error": "Erro inesperado.",
             "detail": str(e)
         }, 500
 
 
+@app.route("/api/v1/send-info", methods=["POST"])
+def send_info():
+    try:
+        # Ler as informações do arquivo
+        with open('dados_extraidos.txt', 'r') as file:
+            saved_data = json.loads(file.read())
+
+        # Enviar as informações para a nova rota via POST
+        response = requests.post('URL_DA_NOVA_ROTA', json=saved_data)
+        if response.status_code == 200:
+            return {
+                "message": "Informações enviadas com sucesso."
+            }
+        else:
+            return {
+                "error": "Erro ao enviar informações para a nova rota."
+            }, 500
+    except Exception as e:
+        return {
+            "error": "Erro inesperado.",
+            "detail": str(e)
+        }, 500
 
 
