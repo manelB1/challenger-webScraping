@@ -16,11 +16,17 @@ Este projeto é um web scraper que extrai informações de processos judiciais d
 ## Instalação
 1. Clone este repositório para o seu ambiente local.
 2. Instale as dependências do Python executando `pip install -r requirements.txt`.
+2. Instale as dependências do Python executando `pip install Flask`.
+2. Instale as dependências do Python executando `pip install lxml`.
 
 ## Como Usar
-- Execute o arquivo `app.py` para iniciar o servidor Flask.
+- Execute o comando `flask --app api run --debug` para iniciar o servidor Flask.
+- A porta padrão do flask é a `5000`, mas você pode utilizar outra para iniciar o servidor Flask.
+- Exemplo de rota a ser seguida: `http://127.0.0.1:5000/api/v1/find-process/`
 - Use uma ferramenta como o Postman para fazer requisições POST para as rotas `/api/v1/find-process/`, `/api/v1/send-info/`, e `/api/v1/receive-info/`.
 - Siga a ordem das rotas para extrair, enviar e receber informações dos processos judiciais.
+- Para fazer com a rota `find-process` funcione é necessário enviar no corpo da rota `{"numeroProcesso": "0000005-79.1986.8.18.0052"}`
+- Para funcionar basta apenas chama a rota `/api/v1/find-process/` e a rota `/api/v1/send-info/`
 
 ## Exemplos
 - Consulte os exemplos no código-fonte para entender como usar as rotas.
@@ -31,9 +37,6 @@ Este projeto é um web scraper que extrai informações de processos judiciais d
 
 ## Licença
 Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para obter mais informações.
-
-## Contato
-- Para perguntas ou mais informações, entre em contato com [seu nome] em [seu email].
 
 ## Créditos
 - Este projeto utiliza as bibliotecas Flask, lxml e requests para web scraping e API de servidor web.

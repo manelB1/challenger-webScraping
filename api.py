@@ -130,7 +130,7 @@ def find_process_tj():
             file.write(json.dumps(process_info))
             
         return jsonify({
-            "tj_process": process_info
+            "Sucess": "Informações Enviadas com Sucesso para `dados_extraidos.txt`"
         })
     
     except requests.exceptions.RequestException as e:
@@ -163,7 +163,6 @@ def send_info():
         if response.status_code == 200:
             logging.info("Informações recebidas com sucesso http://127.0.0.1:5000/api/v1/receive-info")
             return {
-                "message": "Informações enviadas com sucesso.",
                 "result": response.json()
             }
         else:
