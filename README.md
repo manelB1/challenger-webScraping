@@ -27,7 +27,7 @@ Este projeto é um web scraper que extrai informações de processos judiciais d
 - Siga a ordem das rotas para extrair, enviar e receber informações dos processos judiciais.
 - Para fazer com a rota `find-process` funcione é necessário enviar no corpo da requisição do postman os dados em formato json `{ "numeroProcesso": "0000005-79.1986.8.18.0052" }`
 - Abre o postman `raw >> JSON`
-- Para funcionar basta apenas chama a rota `/api/v1/find-process/` e a rota `/api/v1/send-info/`
+- Para funcionar basta apenas chama a rota `/api/v1/find-process/` e a rota em sequencia`/api/v1/send-info/`
 
 ## Exemplos
 - Consulte os exemplos no código-fonte para entender como usar as rotas.
