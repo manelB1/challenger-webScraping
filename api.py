@@ -161,7 +161,8 @@ def send_info():
         response = requests.post('http://127.0.0.1:5000/api/v1/receive-info', json=saved_data)
         if response.status_code == 200:
             return {
-                "message": "Informações enviadas com sucesso."
+                "message": "Informações enviadas com sucesso.",
+                "result": response.json()
             }
         else:
             return {
@@ -173,4 +174,20 @@ def send_info():
             "detail": str(e)
         }, 500
 
+
+@app.route("/api/v1/receive-info", methods=["POST"])
+def receive_info():
+    try:
+        # pode acessar os dados recebidos do POST
+        received_data = request.get_json()
+        print(received_data)
+        # Faz o processamento necessário com os dados recebidos
+
+        return  received_data
+        
+    except Exception as e:
+        return {
+            "error": "Erro ao processar informações recebidas.",
+            "detail": str(e)
+        }, 500
 
