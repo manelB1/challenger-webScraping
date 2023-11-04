@@ -30,6 +30,8 @@ def get_session_cookies_and_headers():
     return jsessionid, oauth_token_request_state, awsalbapp
 
 
+
+
 #Aqui é a rota e a função onde capturamos o que está vindo do POSTMAN via json e o retorno da função acima(no caso os cookies, os headers nao precisou)
 # a rota aceita os dados vindo da requisição como string mesmo
 # basicamente isso aqui vai na rota e faz a busca por numero do processo e retorna a sucesso se todos os requisitos estiverem cumpridos
@@ -156,6 +158,10 @@ def find_process_tj():
         }, 500
 
 
+
+
+
+
 @app.route("/api/v1/send-info", methods=["POST"])
 def send_info():
     try:
@@ -181,6 +187,8 @@ def send_info():
             "error": "Erro inesperado.",
             "detail": str(e)
         }, 500
+
+
 
 
 @app.route("/api/v1/receive-info", methods=["POST"])
