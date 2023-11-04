@@ -30,8 +30,10 @@ def get_session_cookies_and_headers():
     return jsessionid, oauth_token_request_state, awsalbapp
 
 
-#Aqui é a rota e a função onde capturamos o que está vindo do POSTMAN via json e o retorno da função acima
-#
+#Aqui é a rota e a função onde capturamos o que está vindo do POSTMAN via json e o retorno da função acima(no caso os cookies, os headers nao precisou)
+# a rota aceita os dados vindo da requisição como string mesmo
+# basicamente isso aqui vai na rota e faz a busca por numero do processo e retorna a sucesso se todos os requisitos estiverem cumpridos
+#basicamente essa rota peguei por cURL
 @app.route("/api/v1/find-process/", methods=["POST"])
 def find_process_tj():
 
@@ -101,9 +103,13 @@ def find_process_tj():
         
         process_info = {}
 
+        #aqui basicamente eu só faço a captura do conteudo se o status da rota for menor ou igual a 300
+        #status acima disso se configuram em error http
         if response.status_code <= 300:
             response_data = response.text
 
+            #aqui eu faço a leitura do código HTML gerado no retorno da rota eu poderia ter utilizado o beatifulsoup para manipular os dados
+            # da resposta HTML.
             tree = html.fromstring(response_data)
             logging.info("Consulta realizada com sucesso!!")
             td_elements = tree.xpath('//table[@id="fPP:processosTable"]/tbody/tr/td')
